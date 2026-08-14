@@ -51,6 +51,13 @@
     -webkit-font-smoothing:antialiased;
     overflow-x:hidden;
     padding:28px 18px;
+    transition:background .35s ease;
+  }
+  body.spider-mode{
+    background:
+      radial-gradient(circle at 20% 20%, rgba(255,42,42,0.18), transparent 30%),
+      radial-gradient(circle at 80% 30%, rgba(18,86,255,0.16), transparent 28%),
+      #07090d;
   }
   img{ max-width:100%; display:block; }
   a{ color:inherit; text-decoration:none; }
@@ -279,6 +286,17 @@
     font-style:normal;
     color:var(--accent);
   }
+  .kenzo-trigger{
+    display:inline-block;
+    cursor:pointer;
+    user-select:none;
+    transition:transform .2s ease, filter .2s ease;
+  }
+  .kenzo-trigger:hover,
+  .kenzo-trigger:focus-visible{
+    transform:scale(1.04);
+    filter:brightness(1.15);
+  }
   .role{
     font-family:var(--font-mono);
     font-size:clamp(0.76rem,1.3vw,0.95rem);
@@ -392,6 +410,47 @@
     background:#d8d7d2;
     display:block;
     box-shadow:inset 0 0 0 1px rgba(255,255,255,0.08);
+    transition:filter .35s ease, transform .35s ease;
+  }
+  .spider-overlay{
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    opacity:0;
+    transition:opacity .35s ease;
+    background:
+      linear-gradient(90deg, rgba(255,0,0,0.58) 0 30%, rgba(18,36,255,0.62) 30% 70%, rgba(255,0,0,0.58) 70% 100%),
+      linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.3));
+    mix-blend-mode:screen;
+  }
+  body.spider-mode .photo-frame img{
+    filter:none;
+    transform:scale(1.02);
+  }
+  body.spider-mode .spider-overlay{
+    opacity:1;
+  }
+  body.spider-mode .photo-frame{
+    box-shadow:0 30px 70px -24px rgba(255,35,35,0.5);
+  }
+  body.spider-mode #circuit-bg{
+    filter:saturate(1.5) contrast(1.2) brightness(1.15);
+    opacity:0.9;
+  }
+  body.spider-mode .hero::before{
+    content:"";
+    position:absolute;
+    inset:-8% -6% -8% -6%;
+    background:
+      radial-gradient(circle at 25% 30%, rgba(255,48,48,0.22), transparent 28%),
+      radial-gradient(circle at 70% 35%, rgba(38,94,255,0.2), transparent 30%),
+      linear-gradient(135deg, rgba(255,255,255,0.02), rgba(255,255,255,0));
+    pointer-events:none;
+    animation:spiderPulse 2s ease-in-out infinite alternate;
+  }
+  @keyframes spiderPulse{
+    from { transform:scale(0.98); opacity:0.6; }
+    to { transform:scale(1.04); opacity:1; }
   }
   .photo-tag{
     display:none;
@@ -794,7 +853,7 @@
     <div class="wrap hero-inner">
       <div class="hero-copy">
         <span class="eyebrow">system.init</span>
-        <h1>Hi, I'm <em>Kenzo.</em></h1>
+        <h1>Hi, I'm <em class="kenzo-trigger" tabindex="0" aria-label="Secret Kenzo trigger">Kenzo.</em></h1>
         <span class="role">ASPIRING SOFTWARE DEVELOPER</span>
         <p class="lede">I'm Kenzo, an aspiring software developer passionate about technology, programming, and building digital and hardware projects. I'm continuously learning, experimenting, and turning ideas into real projects.</p>
         <div class="hero-actions">
@@ -821,7 +880,8 @@
         <div class="photo-frame">
           <div class="corner-tr"></div>
           <div class="corner-bl"></div>
-          <img src="kenzo.jpg" alt="Portrait of Kenzo">
+          <div class="spider-overlay" aria-hidden="true"></div>
+          <img id="portrait-image" src="kenzo.jpg" alt="Portrait of Kenzo">
           <div class="photo-tag">
             <span><span class="dot"></span>KENZO.dev</span>
             <span>status: learning</span>
@@ -1048,6 +1108,68 @@
   }
   document.addEventListener("scroll", updateActive, { passive:true });
   updateActive();
+
+  /* ---------- secret Kenzo easter egg ---------- */
+  var kenzoTrigger = document.querySelector(".kenzo-trigger");
+  var portraitImage = document.getElementById("portrait-image");
+  var spiderAudio = new Audio("spiderman-song.mp3");
+  var kenzoClickCount = 0;
+  var kenzoResetTimer = null;
+  var spiderTimer = null;
+
+  spiderAudio.preload = "auto";
+  spiderAudio.volume = 1;
+  spiderAudio.muted = false;
+
+  function activateSpiderMode(){
+    document.body.classList.add("spider-mode");
+
+    if(portraitImage){
+      portraitImage.src = "spidey-ken.jpg";
+      portraitImage.alt = "Spider-Man portrait";
+    }
+
+    if(spiderAudio){
+      spiderAudio.pause();
+      spiderAudio.currentTime = 0;
+      spiderAudio.play().catch(function(){
+        // the track is triggered by a user click, so playback should normally work
+      });
+    }
+
+    clearTimeout(spiderTimer);
+    spiderTimer = setTimeout(function(){
+      document.body.classList.remove("spider-mode");
+      if(portraitImage){
+        portraitImage.src = "kenzo.jpg";
+        portraitImage.alt = "Portrait of Kenzo";
+      }
+      if(spiderAudio){
+        spiderAudio.pause();
+        spiderAudio.currentTime = 0;
+      }
+    }, 7000);
+  }
+
+  if(kenzoTrigger){
+    kenzoTrigger.addEventListener("click", function(){
+      kenzoClickCount += 1;
+      clearTimeout(kenzoResetTimer);
+      kenzoResetTimer = setTimeout(function(){ kenzoClickCount = 0; }, 1500);
+
+      if(kenzoClickCount >= 5){
+        activateSpiderMode();
+        kenzoClickCount = 0;
+      }
+    });
+
+    kenzoTrigger.addEventListener("keydown", function(event){
+      if(event.key === "Enter" || event.key === " "){
+        event.preventDefault();
+        kenzoTrigger.click();
+      }
+    });
+  }
 
   /* ---------- reveal on scroll ---------- */
   var revealEls = document.querySelectorAll(".reveal, .reveal-stagger");
