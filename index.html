@@ -9,7 +9,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;450;500;600;700&display=swap" rel="stylesheet">
 
 <style>
   /* ============================================
@@ -35,7 +35,11 @@
     --glow-soft:     rgba(255,255,255,0.16);
 
     --font-body:     -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", system-ui, sans-serif;
-    --font-mono:     "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+    /* one family throughout, Apple-style: hierarchy comes from weight,
+       size and tracking rather than from mixing typefaces.
+       SF Pro on Apple devices, Inter as the closest match elsewhere. */
+    --font-display:  var(--font-body);
+    --font-label:    var(--font-body);
 
     --max-w:         1120px;
     --r-sm:          12px;
@@ -214,8 +218,9 @@
      ============================================ */
   h1,h2,h3{
     margin:0;
+    font-family:var(--font-display);
     font-weight:600;
-    letter-spacing:-0.035em;
+    letter-spacing:-0.032em;  /* SF-style optical tightening at display sizes */
     line-height:1.06;
   }
 
@@ -223,12 +228,11 @@
     display:inline-flex;
     align-items:center;
     gap:9px;
-    font-family:var(--font-mono);
-    font-size:0.7rem;
+    font-family:var(--font-label);
+    font-size:0.82rem;
     font-weight:500;
-    letter-spacing:0.16em;
-    text-transform:uppercase;
-    color:var(--text-faint);
+    letter-spacing:-0.005em;
+    color:var(--text-dim);
     margin-bottom:18px;
   }
   .eyebrow::before{
@@ -250,7 +254,12 @@
     -webkit-background-clip:text;
     background-clip:text;
     color:transparent;
-    margin-bottom:0.45em;
+    /* background-clip:text only paints inside the element box, so the tight
+       display line-height was cropping descenders (g, j, y). Give the box
+       room to contain the glyphs. */
+    line-height:1.15;
+    padding-bottom:0.1em;
+    margin-bottom:0.35em;
   }
   .section-head{
     max-width:660px;
@@ -478,8 +487,8 @@
   .hero h1{
     font-size:clamp(2.4rem,7vw,5.4rem);
     font-weight:600;
-    letter-spacing:-0.045em;
-    line-height:0.98;
+    letter-spacing:-0.042em;
+    line-height:1.0;
     margin-bottom:20px;
     color:#ffffff;
   }
@@ -492,6 +501,7 @@
     background-clip:text;
     color:transparent;
     -webkit-text-fill-color:transparent;
+    padding-bottom:0.14em;   /* inline padding: extends the paint box, no layout shift */
   }
   /* paints its own solid fill so the parent's clipped gradient
      isn't needed once transform/filter promotes it to its own layer */
@@ -519,10 +529,10 @@
     backdrop-filter:blur(18px);
     -webkit-backdrop-filter:blur(18px);
     border:1px solid var(--hairline);
-    font-family:var(--font-mono);
-    font-size:0.71rem;
-    letter-spacing:0.14em;
-    text-transform:uppercase;
+    font-family:var(--font-label);
+    font-size:0.84rem;
+    font-weight:500;
+    letter-spacing:-0.005em;
     color:var(--text-dim);
     margin-bottom:26px;
   }
@@ -655,10 +665,10 @@
     flex-direction:column;
     align-items:center;
     gap:9px;
-    font-family:var(--font-mono);
-    font-size:0.62rem;
-    letter-spacing:0.2em;
-    text-transform:uppercase;
+    font-family:var(--font-label);
+    font-size:0.72rem;
+    font-weight:500;
+    letter-spacing:-0.005em;
     color:var(--text-faint);
   }
   .scroll-cue .track{
@@ -763,11 +773,11 @@
   .stat-row:last-child{ border-bottom:none; }
   .stat-row:hover{ background:rgba(255,255,255,0.035); padding-left:30px; }
   .stat-row .k{
-    font-family:var(--font-mono);
-    font-size:0.7rem;
-    letter-spacing:0.12em;
-    text-transform:uppercase;
-    color:var(--text-faint);
+    font-family:var(--font-label);
+    font-size:0.85rem;
+    font-weight:500;
+    letter-spacing:-0.005em;
+    color:var(--text-dim);
   }
   .stat-row .v{
     font-size:0.88rem;
@@ -794,12 +804,11 @@
     background:var(--glass-2);
   }
   .skill-cat h3{
-    font-family:var(--font-mono);
-    font-size:0.68rem;
-    font-weight:500;
-    letter-spacing:0.15em;
-    text-transform:uppercase;
-    color:var(--text-faint);
+    font-family:var(--font-label);
+    font-size:0.88rem;
+    font-weight:600;
+    letter-spacing:-0.01em;
+    color:var(--text);
     margin-bottom:18px;
   }
   .chip-list{ display:flex; flex-wrap:wrap; gap:8px; }
@@ -878,10 +887,10 @@
     backdrop-filter:blur(18px) saturate(180%);
     -webkit-backdrop-filter:blur(18px) saturate(180%);
     border:1px solid var(--hairline-2);
-    font-family:var(--font-mono);
-    font-size:0.62rem;
-    letter-spacing:0.14em;
-    text-transform:uppercase;
+    font-family:var(--font-label);
+    font-size:0.74rem;
+    font-weight:500;
+    letter-spacing:-0.005em;
     color:#fff;
   }
   .badge .dot{
@@ -918,9 +927,10 @@
     border-radius:100px;
     background:rgba(255,255,255,0.04);
     border:1px solid var(--hairline);
-    font-family:var(--font-mono);
-    font-size:0.68rem;
-    letter-spacing:0.04em;
+    font-family:var(--font-label);
+    font-size:0.79rem;
+    font-weight:450;
+    letter-spacing:-0.005em;
     color:var(--text-dim);
     transition:background .35s var(--ease), color .35s var(--ease);
   }
@@ -933,9 +943,10 @@
     text-align:center;
     border:1px dashed rgba(255,255,255,0.14);
     background:rgba(255,255,255,0.02);
-    font-family:var(--font-mono);
-    font-size:0.78rem;
-    letter-spacing:0.08em;
+    font-family:var(--font-label);
+    font-size:0.9rem;
+    font-weight:450;
+    letter-spacing:-0.005em;
     color:var(--text-faint);
     transition:border-color .45s var(--ease), color .45s var(--ease), background .45s var(--ease);
   }
@@ -965,12 +976,12 @@
   }
   .contact-card .k{
     display:block;
-    font-family:var(--font-mono);
-    font-size:0.66rem;
-    letter-spacing:0.15em;
-    text-transform:uppercase;
-    color:var(--text-faint);
-    margin-bottom:11px;
+    font-family:var(--font-label);
+    font-size:0.8rem;
+    font-weight:500;
+    letter-spacing:-0.005em;
+    color:var(--text-dim);
+    margin-bottom:9px;
   }
   .contact-card .v{
     font-size:0.98rem;
@@ -1014,9 +1025,10 @@
   }
   .footer-brand p{
     margin:6px 0 0;
-    font-family:var(--font-mono);
-    font-size:0.74rem;
-    letter-spacing:0.06em;
+    font-family:var(--font-label);
+    font-size:0.85rem;
+    font-weight:450;
+    letter-spacing:-0.005em;
     color:var(--text-faint);
   }
 
@@ -1371,10 +1383,10 @@
 <footer>
   <div class="wrap footer-inner">
     <div class="footer-brand">
-      <span class="logo"><span class="mark"></span>Kenzo</span>
+      <span class="logo"><span class="mark"></span>Kenzo Esmane</span>
       <p>Aspiring Software Developer</p>
     </div>
-    <p style="margin:0; font-family:var(--font-mono); font-size:0.72rem; color:var(--text-faint);">© 2026 — built &amp; maintained by Kenzo</p>
+    <p style="margin:0; font-family:var(--font-label); font-size:0.82rem; color:var(--text-faint);">© 2026 — built &amp; maintained by Kenzo Esmane</p>
   </div>
 </footer>
 
