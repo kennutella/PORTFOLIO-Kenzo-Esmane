@@ -481,10 +481,17 @@
     letter-spacing:-0.045em;
     line-height:0.98;
     margin-bottom:20px;
-    background:linear-gradient(170deg, #ffffff 34%, rgba(255,255,255,0.5));
+    color:#ffffff;
+  }
+  /* the gradient lives on the static text only. Applying it to the whole h1
+     made the hovered child paint twice: once via the parent's text-clip at the
+     original position, once as its own transformed layer. */
+  .h1-grad{
+    background:linear-gradient(170deg, #ffffff 34%, rgba(255,255,255,0.55));
     -webkit-background-clip:text;
     background-clip:text;
     color:transparent;
+    -webkit-text-fill-color:transparent;
   }
   /* paints its own solid fill so the parent's clipped gradient
      isn't needed once transform/filter promotes it to its own layer */
@@ -1168,7 +1175,7 @@
     <div class="wrap hero-inner">
       <div class="hero-copy">
         <span class="eyebrow rise rise-1">Available to learn &amp; build</span>
-        <h1 class="rise rise-2">Hi, I'm <span class="kenzo-trigger" tabindex="0" role="button" aria-label="Secret Kenzo trigger">Kenzo.</span></h1>
+        <h1 class="rise rise-2"><span class="h1-grad">Hi, I'm</span> <span class="kenzo-trigger" tabindex="0" role="button" aria-label="Secret Kenzo trigger">Kenzo.</span></h1>
         <div class="rise rise-3"><span class="role">Aspiring Software Developer</span></div>
         <p class="lede rise rise-3">I'm passionate about technology, programming, and building digital and hardware projects — continuously learning, experimenting, and turning ideas into things that actually work.</p>
         <div class="hero-actions rise rise-4">
